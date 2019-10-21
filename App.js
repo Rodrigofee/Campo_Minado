@@ -1,60 +1,51 @@
+import React, { Component } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import params from './src/params'
+import createMinedBoard from './src/functions'
+import MineField from './src/components/MineField'
+import Field from './src/components/Field'
 
-import Fild from './src/components/Field'
-import React from 'react';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
+export default class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = this.createState()
+  }
 
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
+  minesAmount = () => {
+    const cols = params.getColumnsAmount()
+    const rows = params.getRowsAmount()
+    return Math.ceil(cols * rows * params.difficulteLevel)
+  }
 
-const App = () => {
-  return (
-    <View>
-      <Fild flagged opened />
-    </View>
-  )
+  createState = () => {
+    const cols = params.getColumnsAmount()
+    const rows = params.getRowsAmount()
+    return {
+      board: createMinedBoard(rows, cols, this.minesAmount()),
+    }
+  }
+
+  render() {
+    return (
+      <View style={style.container}>
+        <Text>Iniciando Mines!</Text>
+        <Text>Tamanho da grade:
+      {params.getRowsAmount()}x{params.getColumnsAmount()}</Text>
+        <View style={style.board}>
+          <MineField board={this.state.board} />
+        </View>
+      </View>
+    )
+  }
 }
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+const style = StyleSheet.create({
+  conatainer: {
+    flex: 1,
+    justifyContent: 'flex-end'
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
-
-export default App;
+  board: {
+    alignItems: 'center',
+    backgroundColor: '#AAA'
+  }
+})
